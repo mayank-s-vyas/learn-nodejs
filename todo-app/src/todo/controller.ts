@@ -1,54 +1,59 @@
 import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    ParseIntPipe,
-    Post,
-    Put,
-  } from '@nestjs/common';
-  import { TodoService } from './service';
-  import {
-    CreateTodoRequestDto,
-    GetTodoDateRequestDto,
-  } from './dto/request.dtos';
-  import { TodoResponseDto } from './dto/response.dtos';
-  
-  @Controller('todo')
-  export class TodoController {
-    constructor(private todoService: TodoService) {}
-  
-    // create todo
-    @Post()
-    createTodo(
-      @Body() requestDto: CreateTodoRequestDto,
-    ): Promise<TodoResponseDto> {
-      return this.todoService.createTodo(requestDto);
-    }
-  
-    // get all todos for the username̦
-  
-    @Get('/:userName')
-    getTodoByUsername(
-      @Param('userName') userName: string,
-    ): Promise<TodoResponseDto[]> {
-      return this.todoService.getTodoByUsername(userName);
-    }
-  
-    // delete todo for a username
-    @Delete('/:id')
-    deleteTodoByID(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-      return this.todoService.deleteTodoById(id);
-    }
-    // update todoDate for a particular todo
-  
-    @Put('/:id')
-    updateTodoDate(
-      @Param('id') id: number,
-      @Body() bodyTodoDate: GetTodoDateRequestDto,
-    ): Promise<TodoResponseDto> {
-      return this.todoService.updateTodoDate(id, bodyTodoDate.todoDate);
-    }
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from "@nestjs/common";
+import { TasksService } from "./service";
+import { CreateTaskReqDto, UpdateTaskReqDto } from "./dto/request.dtos";
+import { TasksResDto, TaskResDto, SuccessResponseDto } from "./dto/response.dtos";
+
+@Controller("tasks")
+export class TasksController {
+  constructor(private tasksService: TasksService) {}
+
+  // create todo
+  @Post()
+  createTask(@Body() requestDto: CreateTaskReqDto): Promise<TaskResDto> {
+    return this.tasksService.createTask(requestDto);
   }
-  
+
+  // get by id
+
+  @Get("/:id")
+  getTaskById(@Param("id", ParseIntPipe) id: number): Promise<TaskResDto> {
+    return this.tasksService.getTaskById(id);
+  }
+
+  // get all todos for the username̦
+
+  @Get("/:username")
+  getTasksByUsername(
+    @Param("username") username: string
+  ): Promise<TasksResDto> {
+    return this.tasksService.getAllTasksByUsername(username);
+  }
+
+
+  // delete todo for a username
+  @Delete("/:id")
+  deleteTaskByID(@Param("id", ParseIntPipe) id: number): SuccessResponseDto{
+      this.tasksService.deleteById(id)
+
+     return new SuccessResponseDto(true, `Task having id : ${id} is deleted successfully`)
+
+  }
+  // update todoDate for a particular todo
+
+  @Put("/:id")
+  updateTask(
+    @Param("id") id: number,
+    @Body() updateReqDto: UpdateTaskReqDto
+  ): Promise<TaskResDto> {
+    return this.tasksService.updateById(id, updateReqDto.dueDate);
+  }
+}

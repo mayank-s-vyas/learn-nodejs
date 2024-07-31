@@ -1,23 +1,19 @@
-import { Type } from 'class-transformer';
-import { IsISO8601, IsString } from 'class-validator';
+import { Type } from "class-transformer";
+import { IsISO8601, IsString } from "class-validator";
 
-
-export class CreateTodoRequestDto {
+export class CreateTaskReqDto {
   @IsString()
   title: string;
 
   @IsString()
-  userName: string;
+  username: string;
 
   @IsISO8601()
-  todoDate: Date;
+  dueDate: Date;
 }
 
-
-export class GetTodoDateRequestDto {
-
+export class UpdateTaskReqDto {
   @IsISO8601()
   @Type(() => Date)
-  todoDate: Date;
-
+  dueDate: Date;
 }
